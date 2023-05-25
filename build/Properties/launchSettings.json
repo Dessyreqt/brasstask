@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "_build": {
+      "commandName": "Project"
+    },
+    "install-tools": {
+      "commandName": "Project",
+      "commandLineArgs": "install-tools"
+    }
+  }
+}

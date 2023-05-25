@@ -18,3 +18,5 @@ else {
   Write-Host "Nuke is already installed, trying to update"
   dotnet tool update -g nuke.globaltool
 }
+
+nuke install-tools
