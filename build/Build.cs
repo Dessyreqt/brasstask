@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 
-class Build : NukeBuild
+partial class Build : NukeBuild
 {
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -37,16 +38,34 @@ class Build : NukeBuild
             InstallOrUpdateTool(tools, "dotnet-roundhouse");
         });
 
-    /// Support plugins are available for:
-    ///   - JetBrains ReSharper        https://nuke.build/resharper
-    ///   - JetBrains Rider            https://nuke.build/rider
-    ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
-    ///   - Microsoft VSCode           https://nuke.build/vscode
     public static int Main() => Execute<Build>(x => x.Compile);
 
     void InstallOrUpdateTool(IReadOnlyCollection<Output> tools, string toolName)
     {
-        if (tools.Any(x => x.Text.StartsWith(toolName))) { DotNetTasks.DotNet($"tool update {toolName} --tool-path {Paths.Tools}"); }
-        else { DotNetTasks.DotNet($"tool install {toolName} --tool-path {Paths.Tools}"); }
+        if (tools.Any(x => x.Text.StartsWith(toolName))) { DotNetTasks.DotNetToolUpdate(_ => _.SetPackageName(toolName).SetToolInstallationPath(Paths.Tools)); }
+        else { DotNetTasks.DotNetToolInstall(_ => _.SetPackageName(toolName).SetToolInstallationPath(Paths.Tools)); }
+    }
+
+    Process Run(string exePath, string args = null, bool fromOwnDirectory = false)
+    {
+        string directory = null;
+
+        if (fromOwnDirectory) { directory = Directory.GetParent(exePath).FullName; }
+
+        return Run(exePath, args, directory);
+    }
+
+    Process Run(string exePath, string args, string workingDirectory)
+    {
+        var startInfo = new ProcessStartInfo(exePath);
+
+        if (workingDirectory != null) { startInfo.WorkingDirectory = workingDirectory; }
+
+        startInfo.Arguments = args ?? string.Empty;
+        startInfo.UseShellExecute = false;
+
+        var process = Process.Start(startInfo);
+
+        return process;
     }
 }

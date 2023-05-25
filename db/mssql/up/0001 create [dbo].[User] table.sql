@@ -1,0 +1,9 @@
+CREATE TABLE [dbo].[User] (
+    [UserId] UNIQUEIDENTIFIER DEFAULT NEWID() PRIMARY KEY,
+    [Username] VARCHAR(50) NOT NULL,
+    [Email] VARCHAR(MAX) NOT NULL,
+    [PasswordSalt] VARCHAR(100) NOT NULL,
+    [PasswordHash] VARCHAR(100) NOT NULL,
+    [CreatedAt] DATETIME DEFAULT GETDATE(),
+    [UpdatedAt] DATETIME DEFAULT GETDATE()
+);

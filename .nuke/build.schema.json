@@ -74,8 +74,11 @@
             "enum": [
               "Clean",
               "Compile",
+              "DropAndRestoreMssql",
+              "DropMssql",
               "InstallTools",
-              "Restore"
+              "Restore",
+              "RestoreMssql"
             ]
           }
         },
@@ -87,8 +90,11 @@
             "enum": [
               "Clean",
               "Compile",
+              "DropAndRestoreMssql",
+              "DropMssql",
               "InstallTools",
-              "Restore"
+              "Restore",
+              "RestoreMssql"
             ]
           }
         },
