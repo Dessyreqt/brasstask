@@ -1,7 +1,9 @@
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 using BrassTask.Api.Identity;
 using BrassTask.Api.Infrastructure.Configuration;
+using BrassTask.Api.Infrastructure.Validation;
 using BrassTask.Api.Services.Data;
 using BrassTask.Api.Services.Jwt;
 using FluentValidation;
@@ -18,7 +20,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull; });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(
@@ -110,6 +113,11 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseMiddleware<ValidationMiddleware>();
+
 app.MapControllers();
+
+// problem descriptions
+app.MapGet("problem/validation-error", () => "There was at least one validation error in the request sent. The `errors` field will enumerate the issues found with your request.");
 
 app.Run();
