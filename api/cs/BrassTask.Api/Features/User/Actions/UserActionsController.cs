@@ -15,10 +15,11 @@ public class UserActionsController : ControllerBase
     }
 
     /// <summary>
-    /// Allows a user to register. The user then receives an email asking them to confirm their email, which contains a token that is sent back to the "confirmEmail" endpoint.
+    /// Allows a user to register.
     /// </summary>
+    /// <returns>The userId of the new user.</returns>
     [HttpPost("register")]
-    public async Task<ActionResult<Register.Response>> ActionRegister([FromBody] Register.Request request)
+    public async Task<ActionResult<Register.Response>> CreateUser([FromBody] Register.Request request)
     {
         var response = await _mediator.Send(request);
 

@@ -7,9 +7,12 @@ using BrassTask.Api.Services.Jwt;
 using FluentValidation;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 
 var builder = WebApplication.CreateBuilder(args);
 
