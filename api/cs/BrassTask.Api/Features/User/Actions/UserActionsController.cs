@@ -19,21 +19,19 @@ public class UserActionsController : ControllerBase
     /// </summary>
     /// <returns>The userId of the new user.</returns>
     [HttpPost("register")]
-    public async Task<ActionResult<Register.Response>> CreateUser([FromBody] Register.Request request)
+    public async Task<ActionResult<CreateUser.Response>> CreateUser([FromBody] CreateUser.Request request)
     {
         var response = await _mediator.Send(request);
 
-        if (response.UserId != Guid.Empty)
-        {
-            var actionName = nameof(UserController.GetUser);
-            var controllerName = "User";
-            var routeValues = new
-            {
-                userId = response.UserId
-            };
-            return CreatedAtAction(actionName, controllerName, routeValues, response);
-        }
+        if (response.UserId == Guid.Empty) { return StatusCode(500); }
 
-        return StatusCode(500);
+        var actionName = nameof(UserController.GetUser);
+        var controllerName = "User";
+        var routeValues = new
+        {
+            userId = response.UserId
+        };
+
+        return CreatedAtAction(actionName, controllerName, routeValues, response);
     }
 }

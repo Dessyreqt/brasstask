@@ -1,4 +1,4 @@
-﻿namespace BrassTask.Api.Features.User.Actions.Register;
+﻿namespace BrassTask.Api.Features.User.Actions.CreateUser;
 
 using BrassTask.Api.Identity;
 using FluentValidation;
