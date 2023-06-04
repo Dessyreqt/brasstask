@@ -20,7 +20,7 @@ public class UserController : ControllerBase
     /// <param name="userId">The id of the user to return.</param>
     /// <returns>The recruiter with the specified <paramref name="userId"/>, if it exists.</returns>
     [HttpGet("{userId}")]
-    public async Task<IActionResult> GetUser(int userId)
+    public async Task<IActionResult> GetUser(Guid userId)
     {
         return Ok();
     }
