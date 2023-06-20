@@ -32,13 +32,9 @@ builder.Services.AddSwaggerGen(
             new OpenApiInfo
             {
                 Version = "v1",
-                Title = "JobSearch API",
-                Description = "This documentation provides information about the JobSearch API.",
-                Contact = new OpenApiContact
-                {
-                    Name = "David Carroll",
-                    Url = new Uri("https://www.dscarroll.com/")
-                }
+                Title = "BrassTask API",
+                Description = "This documentation provides information about the BrassTask API.",
+                Contact = new OpenApiContact { Name = "David Carroll", Url = new Uri("https://www.dscarroll.com/") }
             });
 
         c.AddSecurityDefinition(
@@ -93,10 +89,7 @@ builder.Services.AddAuthentication(
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = false,
-            ValidateAudience = false
+            ValidateIssuerSigningKey = true, IssuerSigningKey = new SymmetricSecurityKey(key), ValidateIssuer = false, ValidateAudience = false
         };
     });
 
