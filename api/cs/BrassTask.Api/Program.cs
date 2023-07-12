@@ -109,7 +109,4 @@ app.UseMiddleware<ValidationMiddleware>();
 
 app.MapControllers();
 
-// problem descriptions
-app.MapGet("problem/validation-error", () => "There was at least one validation error in the request sent. The `errors` field will enumerate the issues found with your request.");
-
 app.Run();
