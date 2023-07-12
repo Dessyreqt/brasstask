@@ -24,7 +24,7 @@ public class ValidationMiddleware
             context.Response.StatusCode = 400;
             var response = new ValidationProblemDetails
             {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Type = "https://datatracker.ietf.org/doc/html/rfc9110#name-400-bad-request",
                 Title = "One or more validation errors occurred.",
                 Status = 400,
                 Detail = "See the errors property for details.",
