@@ -5,15 +5,21 @@ using MediatR.Pipeline;
 
 public class ValidationPreProcessor<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
-    private readonly IValidator<TRequest> _validator;
+    private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-    public ValidationPreProcessor(IValidator<TRequest> validator)
+    public ValidationPreProcessor(IEnumerable<IValidator<TRequest>> validators)
     {
-        _validator = validator;
+        _validators = validators;
     }
 
     public async Task Process(TRequest request, CancellationToken cancellationToken)
     {
-        await _validator.ValidateAndThrowAsync(request, cancellationToken);
+        var validationResults = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(request, cancellationToken)));
+        var validationFailures = validationResults.SelectMany(r => r.Errors).Where(f => f is not null).ToList();
+
+        if (validationFailures.Count != 0)
+        {
+            throw new ValidationException(validationFailures);
+        }
     }
 }

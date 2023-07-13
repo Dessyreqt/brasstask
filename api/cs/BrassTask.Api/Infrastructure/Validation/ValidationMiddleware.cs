@@ -15,27 +15,25 @@ public class ValidationMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        try { await _next(context); }
+        try
+        {
+            await _next(context);
+        }
         catch (ValidationException ex)
         {
             context.Response.StatusCode = 400;
-            var response = new ValidationProblemDetail
+            var response = new ValidationProblemDetails
             {
-                Errors = ex.Errors.Select(
-                    x => new ValidationError
-                    {
-                        Name = x.PropertyName,
-                        Detail = x.ErrorMessage
-                    })
+                Type = "https://datatracker.ietf.org/doc/html/rfc9110#name-400-bad-request",
+                Title = "One or more validation errors occurred.",
+                Status = 400,
+                Detail = "See the errors property for details.",
+                Errors = ex.Errors.Select(x => new ValidationError { Name = x.PropertyName, Detail = x.ErrorMessage }),
             };
 
             await context.Response.WriteAsJsonAsync(
                 response,
-                new JsonSerializerOptions
-                {
-                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
+                new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         }
     }
 }

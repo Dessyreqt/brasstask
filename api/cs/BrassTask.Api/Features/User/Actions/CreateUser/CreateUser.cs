@@ -64,15 +64,9 @@ public class Handler : IRequestHandler<Request, Response>
 
         if (user is not null)
         {
-            return new Response
-            {
-                UserId = user.UserId
-            };
+            return new Response { UserId = user.UserId };
         }
 
-        return new Response
-        {
-            UserId = Guid.Empty
-        };
+        return new Response { UserId = Guid.Empty };
     }
 }
