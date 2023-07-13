@@ -1,6 +1,7 @@
 ﻿namespace BrassTask.Api.Features.User.Actions.CreateUser;
 
 using BrassTask.Api.Identity;
+using BrassTask.Api.Services.Data;
 using FluentValidation;
 using MediatR;
 
@@ -19,12 +20,32 @@ public class Response
 
 public class Validation : AbstractValidator<Request>
 {
-    public Validation()
+    private readonly IUserRepository _userRepo;
+
+    public Validation(IUserRepository userRepo)
     {
+        _userRepo = userRepo;
+
         RuleFor(x => x.Username).NotEmpty();
+        RuleFor(x => x.Username).MustAsync(HaveUniqueUsername).WithMessage("Username is taken.");
         RuleFor(x => x.Email).NotEmpty().EmailAddress();
+        RuleFor(x => x.Email).MustAsync(HaveUniqueEmail).WithMessage("Email has account registered.");
         RuleFor(x => x.Password).Length(6, 100);
         RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage("'Confirm Password' should match 'Password'.");
+    }
+
+    private async Task<bool> HaveUniqueUsername(string username, CancellationToken cancellationToken)
+    {
+        if (await _userRepo.GetUserByUsernameAsync(username) is not null) { return false; }
+
+        return true;
+    }
+
+    private async Task<bool> HaveUniqueEmail(string email, CancellationToken cancellationToken)
+    {
+        if (await _userRepo.GetUserByEmailAsync(email) is not null) { return false; }
+
+        return true;
     }
 }
 

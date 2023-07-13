@@ -20,10 +20,22 @@ public class UserRepository : IUserRepository
     {
         using var connection = GetOpenConnection();
         return await connection.QuerySingleOrDefaultAsync<User>(
-            "SELECT * FROM [Users] WHERE [Username] = @Username",
+            "SELECT * FROM [User] WHERE [Username] = @Username",
             new
             {
                 Username = username
+            }
+        );
+    }
+
+    public async Task<User?> GetUserByEmailAsync(string email)
+    {
+        using var connection = GetOpenConnection();
+        return await connection.QuerySingleOrDefaultAsync<User>(
+            "SELECT * FROM [User] WHERE [Email] = @Email",
+            new
+            {
+                Email = email
             }
         );
     }
@@ -32,7 +44,7 @@ public class UserRepository : IUserRepository
     {
         using var connection = GetOpenConnection();
         return await connection.QuerySingleOrDefaultAsync<string>(
-            "SELECT [PasswordHash] FROM [Users] WHERE [Username] = @Username",
+            "SELECT [PasswordHash] FROM [User] WHERE [Username] = @Username",
             new
             {
                 Username = username
