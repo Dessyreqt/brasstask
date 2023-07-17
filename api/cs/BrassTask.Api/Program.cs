@@ -117,4 +117,6 @@ app.UseMiddleware<ValidationMiddleware>();
 
 app.MapControllers();
 
+app.Logger.LogInformation("BrassTask API started successfully.");
+
 app.Run();
