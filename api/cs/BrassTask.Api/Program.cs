@@ -96,7 +96,7 @@ builder.Services.AddAuthentication(
     });
 
 // create the final logger now that services are available
-builder.Host.UseSerilog((context, services, config) => config.ReadFrom));
+builder.Host.UseSerilog((context, services, config) => config.ReadFrom.Configuration(context.Configuration).ReadFrom.Services(services).Enrich.FromLogContext());
 
 var app = builder.Build();
 
