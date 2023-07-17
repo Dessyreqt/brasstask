@@ -22,6 +22,8 @@ var builder = WebApplication.CreateBuilder(args);
 // configure logging prior to services being added
 Log.Logger = new LoggerConfiguration().MinimumLevel.Override("Microsoft", LogEventLevel.Warning).Enrich.FromLogContext().WriteTo.Console().CreateBootstrapLogger();
 
+Log.Information("Starting up BrassTask API");
+
 builder.Services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull; });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -96,7 +98,7 @@ builder.Services.AddAuthentication(
     });
 
 // create the final logger now that services are available
-builder.Host.UseSerilog((context, services, config) => config.ReadFrom.Configuration(context.Configuration).ReadFrom.Services(services).Enrich.FromLogContext());
+builder.Host.UseSerilog((context, services, config) => config.ReadFrom.Configuration(context.Configuration).ReadFrom.Services(services));
 
 var app = builder.Build();
 
