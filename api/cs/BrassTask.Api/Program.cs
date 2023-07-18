@@ -6,7 +6,8 @@ using BrassTask.Api.Infrastructure.Validation;
 using BrassTask.Api.Services.Data;
 using BrassTask.Api.Services.Jwt;
 using FluentValidation;
-using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
+using MediatR;
+using MediatR.Pipeline;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -61,8 +62,6 @@ builder.Services.AddSwaggerGen(
         }
     });
 
-builder.Services.AddFluentValidationRulesToSwagger();
-
 // Project services
 builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection("Mssql"));
 builder.Services.Configure<TokenOptions>(builder.Configuration.GetSection("Jwt"));
@@ -73,6 +72,8 @@ builder.Services.AddScoped<UserManager>();
 
 // Add MediatR
 builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly); });
+builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+builder.Services.AddScoped(typeof(IRequestPreProcessor<>), typeof(ValidationPreProcessor<>));
 
 // Add Validations
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
