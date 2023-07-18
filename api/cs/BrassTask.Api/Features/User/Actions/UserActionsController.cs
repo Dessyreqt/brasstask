@@ -23,15 +23,32 @@ public class UserActionsController : ControllerBase
     {
         var response = await _mediator.Send(request);
 
-        if (response.UserId == Guid.Empty) { return StatusCode(500); }
+        if (response.UserId == Guid.Empty)
+        {
+            return StatusCode(500);
+        }
 
         var actionName = nameof(UserController.GetUser);
         var controllerName = "User";
-        var routeValues = new
-        {
-            userId = response.UserId
-        };
+        var routeValues = new { userId = response.UserId };
 
         return CreatedAtAction(actionName, controllerName, routeValues, response);
+    }
+
+    /// <summary>
+    /// Allows a user to login.
+    /// </summary>
+    /// <returns>A Bearer token that can be used to authenticate to services requiring authorization.</returns>
+    [HttpPost("login")]
+    public async Task<ActionResult<LoginUser.Response>> LoginUser([FromBody] LoginUser.Request request)
+    {
+        var response = await _mediator.Send(request);
+
+        if (response.Token is null)
+        {
+            return StatusCode(500);
+        }
+
+        return Ok(response);
     }
 }

@@ -35,4 +35,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\User\Actions\LoginUser\" />
+  </ItemGroup>
+
 </Project>
