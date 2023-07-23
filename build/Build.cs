@@ -29,6 +29,7 @@ partial class Build : NukeBuild
         });
 
     Target InstallTools => _ => _
+        .Triggers(SetupUserSecrets)
         .Executes(() =>
         {
             if (!Directory.Exists(Paths.Tools)) { Directory.CreateDirectory(Paths.Tools); }
