@@ -7,7 +7,7 @@ Note that there is no license for this project. This code isn't meant to be fork
 
 ## Setting up the project
 
-Once the code is cloned down, run install-tools.ps1. This will install the NUKE tool globally if you don't have it and update it if you do. Then it will run the nuke target to install the remaining tools, which are installed in the `./bin` path.
+Once the code is cloned down, run install-tools.ps1. This will install the NUKE tool globally if you don't have it and update it if you do. Then it will run the nuke target to install the remaining tools, which are installed in the `./bin` path. It will also set up any project-specific settings as detailed below.
 
 Development of this project is only tested on Windows and may not work on other operating systems.
 
