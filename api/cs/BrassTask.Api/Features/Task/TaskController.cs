@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
+[Authorize]
 [Route("api/task")]
 public class TaskController : ControllerBase
 {
@@ -23,7 +24,6 @@ public class TaskController : ControllerBase
     /// <param name="request">The task to be created.</param>
     /// <returns>The id of the created task.</returns>
     [HttpPost]
-    [Authorize]
     public async Task<ActionResult<CreateScheduledTask.Response>> CreateScheduledTask(CreateScheduledTask.Request request)
     {
         var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
@@ -57,7 +57,6 @@ public class TaskController : ControllerBase
     /// <param name="taskId">The id of the task to return.</param>
     /// <returns>The task with the specified <paramref name="taskId"/>, if it exists.</returns>
     [HttpGet("{taskId}")]
-    [Authorize]
     public async Task<ActionResult<ScheduledTask>> GetScheduledTask(Guid taskId)
     {
         var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
