@@ -7,13 +7,13 @@ using MediatR;
 
 public class Request : IRequest<Response>
 {
-    public string Username { get; set; }
-    public string Password { get; set; }
+    public string Username { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 }
 
 public class Response
 {
-    public string Token { get; set; }
+    public string Token { get; set; } = string.Empty;
 }
 
 public class Validation : AbstractValidator<Request>

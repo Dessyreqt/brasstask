@@ -36,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Domain\" />
     <Folder Include="Features\User\Actions\LoginUser\" />
   </ItemGroup>
 

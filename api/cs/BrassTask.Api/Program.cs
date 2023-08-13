@@ -65,10 +65,11 @@ builder.Services.AddSwaggerGen(
     });
 
 // Project services
-builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection("Mssql"));
-builder.Services.Configure<TokenOptions>(builder.Configuration.GetSection("Jwt"));
-builder.Services.Configure<UserOptions>(builder.Configuration.GetSection("User"));
+builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.ConfigSection));
+builder.Services.Configure<TokenOptions>(builder.Configuration.GetSection(TokenOptions.ConfigSection));
+builder.Services.Configure<UserOptions>(builder.Configuration.GetSection(UserOptions.ConfigSection));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<UserManager>();
 
@@ -89,7 +90,7 @@ builder.Services.AddAuthentication(
     }).AddJwtBearer(
     options =>
     {
-        var tokenOptions = builder.Configuration.GetSection("Jwt").Get<TokenOptions>();
+        var tokenOptions = builder.Configuration.GetSection(TokenOptions.ConfigSection).Get<TokenOptions>() ?? new TokenOptions();
         var key = Encoding.ASCII.GetBytes(tokenOptions.Key);
 
         options.RequireHttpsMetadata = false;

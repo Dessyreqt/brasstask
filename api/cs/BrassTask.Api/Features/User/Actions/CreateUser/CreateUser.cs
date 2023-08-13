@@ -7,10 +7,10 @@ using MediatR;
 
 public class Request : IRequest<Response>
 {
-    public string Username { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public string ConfirmPassword { get; set; }
+    public string Username { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public string ConfirmPassword { get; set; } = string.Empty;
 }
 
 public class Response
@@ -36,14 +36,20 @@ public class Validation : AbstractValidator<Request>
 
     private async Task<bool> HaveUniqueUsername(string username, CancellationToken cancellationToken)
     {
-        if (await _userRepo.GetUserByUsernameAsync(username) is not null) { return false; }
+        if (await _userRepo.GetUserByUsernameAsync(username) is not null)
+        {
+            return false;
+        }
 
         return true;
     }
 
     private async Task<bool> HaveUniqueEmail(string email, CancellationToken cancellationToken)
     {
-        if (await _userRepo.GetUserByEmailAsync(email) is not null) { return false; }
+        if (await _userRepo.GetUserByEmailAsync(email) is not null)
+        {
+            return false;
+        }
 
         return true;
     }
