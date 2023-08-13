@@ -34,17 +34,17 @@ builder.Services.AddSwaggerGen(
     {
         c.SwaggerDoc(
             "v1",
-            new OpenApiInfo
+            new()
             {
                 Version = "v1",
                 Title = "BrassTask API",
                 Description = "This documentation provides information about the BrassTask API.",
-                Contact = new OpenApiContact { Name = "David Carroll", Url = new Uri("https://www.dscarroll.com/") }
+                Contact = new() { Name = "David Carroll", Url = new("https://www.dscarroll.com/") }
             });
 
         c.AddSecurityDefinition(
             "oauth2",
-            new OpenApiSecurityScheme
+            new()
             {
                 Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
                 In = ParameterLocation.Header,
@@ -95,7 +95,7 @@ builder.Services.AddAuthentication(
 
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters
+        options.TokenValidationParameters = new()
         {
             ValidateIssuerSigningKey = true, IssuerSigningKey = new SymmetricSecurityKey(key), ValidateIssuer = false, ValidateAudience = false
         };
