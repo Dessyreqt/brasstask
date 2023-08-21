@@ -31,22 +31,22 @@ public class Validation : AbstractValidator<Request>
 
 public class Handler : IRequestHandler<Request, Response>
 {
-    private readonly UserManager _userManager;
+    private readonly UserFacade _userFacade;
 
-    public Handler(UserManager userManager)
+    public Handler(UserFacade userFacade)
     {
-        _userManager = userManager;
+        _userFacade = userFacade;
     }
 
     public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
     {
-        var token = await _userManager.AuthenticateAsync(request.Username, request.Password);
+        var token = await _userFacade.AuthenticateAsync(request.Username, request.Password);
 
-        if (token is null)
+        if (token is null) { throw new UnauthorizedAccessException("Invalid username or password."); }
+
+        return new()
         {
-            throw new UnauthorizedAccessException("Invalid username or password.");
-        }
-
-        return new() { Token = token };
+            Token = token
+        };
     }
 }

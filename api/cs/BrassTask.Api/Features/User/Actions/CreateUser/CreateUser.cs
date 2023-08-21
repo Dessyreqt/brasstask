@@ -36,20 +36,14 @@ public class Validation : AbstractValidator<Request>
 
     private async Task<bool> HaveUniqueUsername(string username, CancellationToken cancellationToken)
     {
-        if (await _userRepo.GetUserByUsernameAsync(username) is not null)
-        {
-            return false;
-        }
+        if (await _userRepo.GetUserByUsernameAsync(username) is not null) { return false; }
 
         return true;
     }
 
     private async Task<bool> HaveUniqueEmail(string email, CancellationToken cancellationToken)
     {
-        if (await _userRepo.GetUserByEmailAsync(email) is not null)
-        {
-            return false;
-        }
+        if (await _userRepo.GetUserByEmailAsync(email) is not null) { return false; }
 
         return true;
     }
@@ -57,22 +51,28 @@ public class Validation : AbstractValidator<Request>
 
 public class Handler : IRequestHandler<Request, Response>
 {
-    private readonly UserManager _userManager;
+    private readonly UserFacade _userFacade;
 
-    public Handler(UserManager userManager)
+    public Handler(UserFacade userFacade)
     {
-        _userManager = userManager;
+        _userFacade = userFacade;
     }
 
     public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.CreateAsync(request.Username, request.Email, request.Password);
+        var user = await _userFacade.CreateAsync(request.Username, request.Email, request.Password);
 
         if (user is not null)
         {
-            return new Response { UserId = user.UserId };
+            return new Response
+            {
+                UserId = user.UserId
+            };
         }
 
-        return new Response { UserId = Guid.Empty };
+        return new Response
+        {
+            UserId = Guid.Empty
+        };
     }
 }
