@@ -14,16 +14,13 @@ public class Request : IRequest<Response>
 public class Response
 {
     public string Token { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
 }
 
 public class Validation : AbstractValidator<Request>
 {
-    private readonly IUserRepository _userRepo;
-
     public Validation(IUserRepository userRepo)
     {
-        _userRepo = userRepo;
-
         RuleFor(x => x.Username).NotEmpty();
         RuleFor(x => x.Password).NotEmpty();
     }
@@ -32,10 +29,12 @@ public class Validation : AbstractValidator<Request>
 public class Handler : IRequestHandler<Request, Response>
 {
     private readonly UserManager _userManager;
+    private readonly IUserRepository _userRepo;
 
-    public Handler(UserManager userManager)
+    public Handler(UserManager userManager, IUserRepository userRepo)
     {
         _userManager = userManager;
+        _userRepo = userRepo;
     }
 
     public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -47,6 +46,8 @@ public class Handler : IRequestHandler<Request, Response>
             throw new UnauthorizedAccessException("Invalid username or password.");
         }
 
-        return new() { Token = token };
+        var user = await _userRepo.GetUserByUsernameAsync(request.Username);
+
+        return new() { Token = token, UserId = user!.UserId };
     }
 }

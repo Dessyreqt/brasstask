@@ -27,6 +27,7 @@ public class TaskController : ControllerBase
     public async Task<ActionResult<CreateScheduledTask.Response>> CreateScheduledTask(CreateScheduledTask.Request request)
     {
         var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+
         if (userIdClaim == null)
         {
             return Unauthorized();
@@ -60,12 +61,38 @@ public class TaskController : ControllerBase
     public async Task<ActionResult<ScheduledTask>> GetScheduledTask(Guid taskId)
     {
         var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+
         if (userIdClaim == null)
         {
             return Unauthorized();
         }
 
         var request = new GetScheduledTask.Request { TaskId = taskId, UserId = Guid.Parse(userIdClaim.Value) };
+        var response = await _mediator.Send(request);
+
+        if (response is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Gets all tasks for the logged in user.
+    /// </summary>
+    /// <returns>The list of tasks belonging to the logged in user.</returns>
+    [HttpGet]
+    public async Task<ActionResult<List<ScheduledTask>>> GetScheduledTasks()
+    {
+        var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+
+        if (userIdClaim == null)
+        {
+            return Unauthorized();
+        }
+
+        var request = new GetAllScheduledTasks.Request { UserId = Guid.Parse(userIdClaim.Value) };
         var response = await _mediator.Send(request);
 
         if (response is null)

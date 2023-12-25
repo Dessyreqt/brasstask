@@ -19,6 +19,7 @@ public class TaskRepository : ITaskRepository
     public async Task CreateAsync(ScheduledTask task)
     {
         using var connection = GetOpenConnection();
+
         var taskId = await connection.ExecuteScalarAsync<Guid>(
             @"INSERT INTO [dbo].[Task] ([UserId], [TaskName], [Description], [ReminderDate], [RepeatInterval], [IsRepeatEnabled])
                 OUTPUT INSERTED.[TaskId] VALUES (@UserId, @TaskName, @Description, @ReminderDate, @RepeatInterval, @IsRepeatEnabled)",
@@ -31,6 +32,12 @@ public class TaskRepository : ITaskRepository
     {
         using var connection = GetOpenConnection();
         return await connection.QuerySingleOrDefaultAsync<ScheduledTask>("SELECT * FROM [dbo].[Task] WHERE [TaskId] = @TaskId", new { TaskId = taskId });
+    }
+
+    public async Task<ScheduledTask?> GetByUserIdAsync(Guid userId)
+    {
+        using var connection = GetOpenConnection();
+        return await connection.QuerySingleOrDefaultAsync<ScheduledTask>("SELECT * FROM [dbo].[Task] WHERE [UserId] = @UserId AND [Deleted] = 0", new { UserId = userId });
     }
 
     private IDbConnection GetOpenConnection()

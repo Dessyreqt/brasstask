@@ -6,6 +6,7 @@ CREATE TABLE [dbo].[Task] (
     [ReminderDate] DATETIME,
     [RepeatInterval] INT,
     [IsRepeatEnabled] BIT,
+    [Deleted] BIT DEFAULT 0,
     [CreatedAt] DATETIME DEFAULT GETDATE(),
     [UpdatedAt] DATETIME DEFAULT GETDATE(),
     FOREIGN KEY ([UserId]) REFERENCES [dbo].[User]([UserId])
