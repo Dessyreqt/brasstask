@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using BrassTask.Api.Identity;
 using BrassTask.Api.Infrastructure.Configuration;
+using BrassTask.Api.Infrastructure.Swagger;
 using BrassTask.Api.Infrastructure.Validation;
 using BrassTask.Api.Services.Crypto;
 using BrassTask.Api.Services.Data;
@@ -17,7 +18,7 @@ using Serilog;
 using Serilog.Events;
 using Swashbuckle.AspNetCore.Filters;
 
-[assembly: ApiConventionType(typeof(DefaultApiConventions))]
+[assembly: ApiConventionType(typeof(ApiResponseConventions))]
 
 var builder = WebApplication.CreateBuilder(args);
 
